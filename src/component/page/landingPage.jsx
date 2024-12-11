@@ -4,7 +4,7 @@ import FilterHouse from './filterHouse';
 
 const LandingPage = () => {
   return (
-    <div className="h-screen flex justify-center items-center  text-blue-800">
+    <div className="h-screen flex justify-center items-center ml-5  text-blue-800">
       <div className=" max-w-3xl mx-auto">
         <div className="flex mb-6">
           <svg
