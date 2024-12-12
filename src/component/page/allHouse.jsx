@@ -65,7 +65,9 @@ const allHouse = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 flex items-center justify-center">
+   <div className='min-h-screen bg-gray-100 p-6  '>
+    <h1 className='text-blue-800 underline text-2xl mb-4'>All House</h1>
+     <div className="flex items-center justify-center">
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 w-full max-w-7xl">
         {houses.map(house => (
           <div key={house.id} className="bg-white p-4 rounded-lg shadow-md">
@@ -83,6 +85,7 @@ const allHouse = () => {
         ))}
       </div>
     </div>
+   </div>
   );
 };
 

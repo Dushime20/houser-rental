@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import ApiService from '../../config/ApiService';
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+   const [loading, setLoading] = useState(false);
+   const navigate = useNavigate()
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -13,11 +17,23 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle the login logic here, e.g., make an API call to authenticate the user
-    console.log({ email, password });
+    try {
+      const formData = { email, password };
+      const response = await ApiService.loginUser(formData);
+      console.log('Login successful:', response);
+      setLoading(true)
+      navigate("/")
+      localStorage.setItem('token', response.token);
+     alert("logged in successfully")
+    } catch (error) {
+      //setError('Failed to login. Please check your email and password.');
+      console.log("error",error.message)
+      setLoading(false)
+    }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
@@ -53,12 +69,15 @@ const Login = () => {
           <Link to={'/signup'}><p>Not have account signup</p></Link>
          </div>
           <div className="flex justify-end">
-            <button
-              type="submit"
-              className="bg-blue-800 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
-            >
-              Login
-            </button>
+          <button
+            type="submit"
+            className={`bg-blue-800 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300 ${
+              loading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+            disabled={loading}
+          >
+            {loading ? 'Login...' : 'Login'}
+          </button>
           </div>
         </form>
       </div>

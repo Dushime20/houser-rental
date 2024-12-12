@@ -11,8 +11,7 @@ const Home = () => {
         <LandingPage/>
         <FilterHouse/>
         <AllHouse/>
-        {/* <About/> */}
-        <Contact/>
+    
     </div>
   )
 }

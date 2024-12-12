@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import ApiService from '../../config/ApiService';
+
 
 const Signup = () => {
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phone, setPhone] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate()
 
   const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+    setName(e.target.value);
   };
 
   const handleEmailChange = (e) => {
@@ -28,14 +33,31 @@ const Signup = () => {
     setPhone(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
+    
     e.preventDefault();
     // Handle the signup logic here, e.g., make an API call to register the user
     if (password !== confirmPassword) {
       alert('Passwords do not match');
       return;
     }
-    console.log({ username, email, password, phone });
+    setLoading(true); 
+    try {
+      const formData = { email, password,name,phone };
+      console.log(formData)
+     
+      const response = await ApiService.registerUser(formData);
+      alert("user registered successfully")
+      console.log('signup successful:', response);
+      navigate("/login")
+      setLoading(false);
+      // Handle successful login, e.g., redirect to a different page or store token
+    } catch (error) {
+      //setError('Failed to register');
+      console.log("error",error.message)
+      setLoading(false);
+    }
+    
   };
 
   return (
@@ -44,11 +66,11 @@ const Signup = () => {
         <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-blue-800 mb-2 font-bold">Username</label>
+            <label htmlFor="name" className="block text-blue-800 mb-2 font-bold">Name</label>
             <input
               type="text"
-              id="username"
-              value={username}
+              id="name"
+              value={name}
               onChange={handleUsernameChange}
               className="w-full p-2 border border-gray-300 rounded"
               placeholder="Enter your username"
@@ -105,16 +127,19 @@ const Signup = () => {
           </div>
           <div className='py-3 text-blue-500'>
          
-         <Link to={'/login'}><p>Not have account signup</p></Link>
+         <Link to={'/login'}><p>Not have account login</p></Link>
         </div>
           <div className="flex justify-end">
          
-            <button
-              type="submit"
-              className="bg-blue-800 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
-            >
-              Sign Up
-            </button>
+          <button
+            type="submit"
+            className={`bg-blue-800 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300 ${
+              loading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+            disabled={loading}
+          >
+            {loading ? 'Signing Up...' : 'Sign Up'}
+          </button>
           </div>
         </form>
       </div>
